@@ -1,61 +1,42 @@
-from collections import Counter
-import string
+import os
+import logging
+from parser import parse_chat_log
+from analyzer import count_messages, extract_keywords_tfidf, generate_summary
 
-STOP_WORDS = {
-    'the', 'is', 'and', 'a', 'an', 'of', 'to', 'in', 'for', 'on', 'that',
-    'with', 'as', 'this', 'it', 'are', 'was', 'at', 'by', 'be', 'from',
-    'or', 'has', 'have', 'but', 'not', 'you', 'i', 'we', 'they', 'he',
-    'she', 'them', 'his', 'her', 'its', 'my', 'our', 'your'
-}
+logging.basicConfig(level=logging.INFO, format='%(message)s')
+logger = logging.getLogger(__name__)
 
-#reads the chat log file and returns its lines as a list of strings
-def read_chat(file_path):
-    with open(file_path, 'r', encoding='utf-8') as file:
-        return file.readlines()
+chat_folder = "sample_logs"
+import os
+import logging
+from parser import parse_chat_log
+from analyzer import count_messages, extract_keywords_tfidf, generate_summary
 
-#parses the chat lines into separate lists for user and AI messages
-def parse_chat(lines):
-    user_messages = []
-    ai_messages = []
-    for line in lines:
-        line = line.strip()
-        if line.startswith("User:"):
-            user_messages.append(line[5:].strip())
-        elif line.startswith("AI:"):
-            ai_messages.append(line[3:].strip())
-    return user_messages, ai_messages
+# This script processes chat logs stored in the "sample_logs" folder.
+# For each text file in the folder:
+# 1. It parses the chat log to separate user and AI messages.
+# 2. Counts the total number of messages and separates counts for user and AI.
+# 3. Extracts the top keywords from the combined messages using TF-IDF.
+# 4. Generates and logs a summary of the analysis.
 
-#tokenizes a given text by converting it to lowercase, removing punctuation and filtering out stop words
-def tokenize(text):
-    text = text.lower().translate(str.maketrans('', '', string.punctuation))
-    return [word for word in text.split() if word not in STOP_WORDS]
+logging.basicConfig(level=logging.INFO, format='%(message)s')
+logger = logging.getLogger(__name__)
 
-#analyzes the frequency of keywords in a list of messages and returns the top N keywords
-def keyword_analysis(messages, top_n=5):
-    all_words = []
-    for msg in messages:
-        all_words.extend(tokenize(msg))
-    return Counter(all_words).most_common(top_n)
+chat_folder = "sample_logs"
 
+for file in os.listdir(chat_folder):
+    if file.endswith(".txt"):
+        logger.info(f"\n--- Analyzing {file} ---")
+        user_msgs, ai_msgs = parse_chat_log(os.path.join(chat_folder, file))
+        stats = count_messages(user_msgs, ai_msgs)
+        keywords = extract_keywords_tfidf(user_msgs + ai_msgs)
 
-def print_summary(user_msgs, ai_msgs):
-    total = len(user_msgs) + len(ai_msgs)
-    user_keywords = keyword_analysis(user_msgs)
-    ai_keywords = keyword_analysis(ai_msgs)
-    combined_keywords = keyword_analysis(user_msgs + ai_msgs)
+        generate_summary(stats, keywords, logger)
+for file in os.listdir(chat_folder):
+    if file.endswith(".txt"):
+        logger.info(f"\n--- Analyzing {file} ---")
+        user_msgs, ai_msgs = parse_chat_log(os.path.join(chat_folder, file))
+        stats = count_messages(user_msgs, ai_msgs)
+        keywords = extract_keywords_tfidf(user_msgs + ai_msgs)
 
-    print("Summary:")
-    print(f"- Total exchanges: {total}")
-    print(f"- User messages: {len(user_msgs)}")
-    print(f"- AI messages: {len(ai_msgs)}")
-    print(f"- Most common keywords: {[word for word, _ in combined_keywords]}")
-
-    if user_keywords:
-        top_user_topics = ', '.join(word for word, _ in user_keywords[:3])
-        print(f"- The user asked mainly about {top_user_topics}.")
-
-
-if __name__ == '__main__':
-    lines = read_chat("sample_logs/war.txt")
-    user_msgs, ai_msgs = parse_chat(lines)
-    print_summary(user_msgs, ai_msgs)
+        generate_summary(stats, keywords, logger)
