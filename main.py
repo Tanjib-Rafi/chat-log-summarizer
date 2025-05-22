@@ -11,7 +11,14 @@ chat_folder = "sample_logs"
 for file in os.listdir(chat_folder):
     if file.endswith(".txt"):
         logger.info(f"\n--- Analyzing {file} ---")
-        user_msgs, ai_msgs = parse_chat_log(os.path.join(chat_folder, file))
+        try:
+            user_msgs, ai_msgs = parse_chat_log(os.path.join(chat_folder, file))
+        except Exception as e:
+            logger.error(f"Error parsing {file}: {e}")
+            continue
+        if not user_msgs and not ai_msgs:
+            logger.warning(f"{file} is empty or contains no valid messages. Skipping.")
+            continue
         stats = count_messages(user_msgs, ai_msgs)
         keywords = extract_keywords_tfidf(user_msgs + ai_msgs)
 
