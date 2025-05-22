@@ -11,14 +11,48 @@ def count_messages(user_msgs, ai_msgs):
 # Extracts the top N keywords from a list of texts using TF-IDF scoring
 def extract_keywords_tfidf(all_texts, top_n=5):
     if not all_texts or all(len(text.strip()) == 0 for text in all_texts):
-        return []  # Return an empty list if input is empty or invalid
+        return []
 
-    vectorizer = TfidfVectorizer(stop_words='english')
+    vectorizer = TfidfVectorizer(
+        stop_words='english',
+        ngram_range=(1, 2),
+        max_df=0.85,
+        min_df=2,
+        max_features=1000,
+        smooth_idf=True,
+        norm='l2',
+    )
     tfidf_matrix = vectorizer.fit_transform(all_texts)
     scores = tfidf_matrix.sum(axis=0).A1
     words = vectorizer.get_feature_names_out()
     ranked = sorted(zip(words, scores), key=lambda x: -x[1])
-    return [word for word, _ in ranked[:top_n]]
+
+    bigram_words = set()
+    bigrams = []
+    unigrams = []
+
+    for word, score in ranked:
+        if " " in word:
+            bigrams.append((word, score))
+            bigram_words.update(word.split())
+        else:
+            unigrams.append((word, score))
+
+    selected_keywords = []
+
+    for word, _ in bigrams:
+        selected_keywords.append(word)
+        if len(selected_keywords) >= top_n:
+            return selected_keywords
+
+    for word, _ in unigrams:
+        if word not in bigram_words:
+            selected_keywords.append(word)
+            if len(selected_keywords) >= top_n:
+                break
+
+    return selected_keywords
+
 
 def generate_summary(stats, keywords, logger, file_name=None):
     if not keywords:
