@@ -1,0 +1,32 @@
+User: Hi there!
+AI: Hello! How can I help you with your shopping today?
+
+User: I’m looking for a smartwatch under $200.
+AI: Sure! Here are a few popular smartwatches under $200:
+
+Amazfit GTS 4 – $149
+
+Fitbit Versa 3 – $179
+
+Xiaomi Watch S1 – $199
+
+Would you like details on any of these?
+
+User: Tell me more about the Amazfit GTS 4.
+AI: The Amazfit GTS 4 features:
+
+1.75" AMOLED display
+
+8-day battery life
+
+Built-in GPS and Alexa
+
+Over 150 sports modes
+
+It’s sleek, lightweight, and great for fitness tracking. Would you like to add it to your cart?
+
+User: Yes, please.
+AI: Done! The Amazfit GTS 4 has been added to your cart. Would you like to check out or continue shopping?
+
+User: Let’s check out.
+AI: Great! Redirecting you to the checkout page now. Let me know if you need help with payment or shipping options.

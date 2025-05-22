@@ -63,7 +63,10 @@ def generate_summary(stats, keywords, logger, file_name=None):
 
     logger.info("\nSummary:")
     logger.info(f"- The conversation had {stats['total']} exchanges.")
-    logger.info(f"- The user asked mainly about {topic} and its uses.")
+    if " " in topic:
+        logger.info(f"- The user asked mainly about topics related to '{topic}'.")
+    else:
+        logger.info(f"- The user asked mainly about '{topic}' and its uses.")
     logger.info(f"- Most common keywords: {', '.join(keywords)}")
 
 
