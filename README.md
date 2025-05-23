@@ -69,15 +69,15 @@ python3 main.py
 ## 📂 File Structure:
 
 chat-log-summarizer/
-├── main.py                 # Main script to run the analyzer
-├── analyzer.py             #Core logic for parsing and TF-IDF
+├── main.py
+├── analyzer.py
 ├── parser.py
 ├── requirements.txt
 ├── README.md
 └── sample_logs/
     ├── war.txt
     ├── ecommerce.txt
-    └── ...
+    └── other_example.txt
 
 
 ## ⚙️ Customization:
