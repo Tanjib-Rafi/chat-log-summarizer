@@ -68,16 +68,21 @@ python3 main.py
 
 ## 📂 File Structure:
 
-chat-log-summarizer/
-├── main.py
-├── analyzer.py
-├── parser.py
-├── requirements.txt
-├── README.md
-└── sample_logs/
-    ├── war.txt
-    ├── ecommerce.txt
-    └── other_example.txt
+```
+📦 chat-log-summarizer
+├─ .gitignore
+├─ README.md
+├─ analyzer.py
+├─ main.py
+├─ parser.py
+├─ requirements.txt
+└─ sample_logs
+   ├─ ecommerce.txt
+   ├─ no_talk.txt
+   ├─ no_user_no_ai.txt
+   ├─ stock_price.txt
+   └─ war.txt
+```
 
 
 ## ⚙️ Customization:
