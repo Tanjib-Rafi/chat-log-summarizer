@@ -44,7 +44,7 @@ This project requires Python **3.7+** and the following libraries:
    cd chat-log-summarizer
 ```
 
-2. **Create a virtual environment:
+2. **Create a virtual environment**:
 
 ```
    python3 -m venv venv
@@ -54,12 +54,12 @@ This project requires Python **3.7+** and the following libraries:
 source venv/bin/activate
 ```
 
-3. **Install dependencies:
+3. **Install dependencies**:
 ```
 pip install -r requirements.txt
 ```
 
-4. **Run the script:
+4. **Run the script**:
 
 ```
 python3 main.py
