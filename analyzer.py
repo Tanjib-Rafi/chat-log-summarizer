@@ -17,7 +17,7 @@ def extract_keywords_tfidf(all_texts, top_n=5):
         stop_words='english',
         ngram_range=(1, 2),
         max_df=0.85,
-        min_df=2,
+        min_df=1,
         max_features=1000,
         smooth_idf=True,
         norm='l2',
@@ -49,6 +49,13 @@ def extract_keywords_tfidf(all_texts, top_n=5):
         if word not in bigram_words:
             selected_keywords.append(word)
             if len(selected_keywords) >= top_n:
+                return selected_keywords
+            
+    # If still fewer than top_n, fill with remaining unigrams or bigrams
+    for word, _ in unigrams + bigrams:
+        if word not in selected_keywords:
+            selected_keywords.append(word)
+            if len(selected_keywords) >= top_n:
                 break
 
     return selected_keywords
@@ -58,8 +65,12 @@ def generate_summary(stats, keywords, logger, file_name=None):
     if not keywords:
         logger.warning(f"No keywords extracted from {file_name}")
         topic = "No Topic Found"
-    else:
-        topic = keywords[0]
+        logger.info("\nSummary:")
+        logger.info(f"- The conversation had {stats['total']} exchanges.")
+        logger.info(f"- The user asked mainly about topics related to '{topic}'.")
+        return
+
+    topic = keywords[0]
 
     logger.info("\nSummary:")
     logger.info(f"- The conversation had {stats['total']} exchanges.")
